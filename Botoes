@@ -1,0 +1,33 @@
+#importa os módulos que serão utilizados
+import gpiozero
+import time
+
+#instancia os botões
+botao_1 = gpiozero.Button(5)
+botao_2 = gpiozero.Button(6)
+botao_3 = gpiozero.Button(13)
+
+#instancia os leds
+led_1 = gpiozero.LED(19)
+led_2 = gpiozero.PWMLED(26)
+
+#função para encerrar a pulsação do led_2
+def para_led_2():
+    led_2.value = 0
+    botao_2.when_pressed = pulsa_led_2
+
+#função para iniciar a pulsação do led_2
+def pulsa_led_2():
+    led_2.pulse()
+    botao_2.when_pressed = para_led_2
+
+#determina a primeira função que o botão
+#irá chamar
+botao_2.when_pressed = pulsa_led_2
+
+
+while True:                 #loop infinito
+    if botao_1.is_pressed:     #se o botao_1 estiver pressionado
+        led_1.on()         #acende o led_1
+        botao_3.wait_for_press() #pausa o loop até que o botao_3 seja pressionado
+        led_1.off()         #apaga o led_1
